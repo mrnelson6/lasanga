@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lasagna Orders</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --ink:#e7ecff;
+      --muted:#95a0c6;
+      --accent:#7dd3fc;
+      --focus:#fbbf24;
+      --ok:#34d399;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#0b1020,#0a0f24 60%);
+      color:var(--ink);
+      font:16px/1.45 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{
+      max-width:700px;
+      margin:0 auto;
+      padding:18px;
+    }
+    header{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:14px;
+    }
+    h1{
+      margin:0;
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .muted{color:var(--muted);font-size:.95rem}
+    .card{
+      background:var(--card);
+      border:1px solid #1d274a;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      padding:16px 16px 18px;
+      margin-bottom:14px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:4px;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+    input,textarea,select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #2a3a6a;
+      background:#0a1430;
+      color:var(--ink);
+      outline:none;
+      font:inherit;
+    }
+    input::placeholder, textarea::placeholder{
+      color:#7b87b6;
+    }
+    textarea{resize:vertical;min-height:70px;}
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .row > .field{flex:1 1 160px;}
+
+    button{
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid #2a3a6a;
+      background:#0e1a3d;
+      color:var(--ink);
+      cursor:pointer;
+      font:inherit;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    button:hover{filter:brightness(1.08)}
+    button:disabled{
+      opacity:.6;
+      cursor:default;
+      filter:none;
+    }
+    .primary{
+      background:linear-gradient(90deg,var(--accent),#60a5fa);
+      color:#071021;
+      border:0;
+      font-weight:600;
+    }
+
+    .pill{
+      height:6px;
+      background:#0a1430;
+      border:1px solid #23325e;
+      border-radius:999px;
+      overflow:hidden;
+      margin:8px 0 12px;
+    }
+    .bar{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--accent),#60a5fa);
+      transition:width .2s;
+    }
+
+    .status{
+      font-size:.9rem;
+      margin-top:6px;
+      min-height:1.1em;
+    }
+    .status.ok{color:var(--ok);}
+    .status.err{color:var(--danger);}
+    .tagline{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#0a1430;
+      border-radius:999px;
+      padding:4px 10px;
+      border:1px solid #23325e;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🍝 Lasagna Orders</h1>
+      <div class="tagline">
+        Fresh homemade lasagna baked to order. Fill out the form and we’ll confirm by email/text.
+      </div>
+      <div class="muted">
+        Choose your pickup/delivery date &amp; time, how much you’d like, and any dietary needs.
+      </div>
+    </header>
+
+    <div class="pill"><div class="bar" id="bar"></div></div>
+
+    <div class="card">
+      <form id="orderForm" autocomplete="off">
+        <div class="field" style="margin-bottom:10px">
+          <label for="name">Your name &amp; contact info <span style="color:var(--focus)">*</span></label>
+          <input id="name" name="name" required
+                 placeholder="e.g., Alex – 555-123-4567 or alex@example.com" />
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="date">Date <span style="color:var(--focus)">*</span></label>
+            <input id="date" name="date" type="date" required />
+          </div>
+          <div class="field">
+            <label for="time">Time <span style="color:var(--focus)">*</span></label>
+            <input id="time" name="time" type="time" required />
+          </div>
+        </div>
+
+        <div class="field" style="margin:10px 0">
+          <label for="location">Location (pickup or delivery address) <span style="color:var(--focus)">*</span></label>
+          <textarea id="location" name="location" required
+                    placeholder="Address, gate code, or 'pickup at your address' etc."></textarea>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="quantity">How much lasagna? <span style="color:var(--focus)">*</span></label>
+            <input id="quantity" name="quantity" type="number" min="1" step="1" required
+                   placeholder="Number of pans or servings" />
+          </div>
+          <div class="field">
+            <label for="size">Size</label>
+            <select id="size" name="size">
+              <option value="">Select (optional)</option>
+              <option value="Half pan">Half pan</option>
+              <option value="Full pan">Full pan</option>
+              <option value="Per person">Per person</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin:10px 0 4px">
+          <label for="diet">Dietary restrictions / notes</label>
+          <textarea id="diet" name="diet"
+                    placeholder="Gluten-free, vegetarian, nut allergy, sauce preferences, etc."></textarea>
+        </div>
+
+        <div class="field" style="margin:8px 0 0">
+          <label for="extra">Anything else?</label>
+          <textarea id="extra" name="extra"
+                    placeholder="Parking notes, preferred contact method, special requests…"></textarea>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:8px;flex-wrap:wrap">
+          <div id="status" class="status"></div>
+          <button id="submitBtn" type="submit" class="primary">
+            <span>Place order</span> <span>➡️</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="muted" style="font-size:.8rem;margin-top:8px">
+      After you submit, your order goes into a Google Sheet and we’ll follow up to confirm details.
+    </div>
+  </div>
+
+  <script>
+    // Put your deployed Apps Script Web App URL here (ends with /exec)
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbyMsM0hAuiy03rl6oqK0WVRcFhMYYlLsmTx2XIvLdHrWB3yk4MxCWOtP7-vtjCGEQNT/exec';
+
+    const bar = document.getElementById('bar');
+    const form = document.getElementById('orderForm');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setBusy(on) {
+      bar.style.width = on ? '100%' : '0%';
+      submitBtn.disabled = on;
+    }
+
+    function setStatus(msg, type) {
+      statusEl.textContent = msg || '';
+      statusEl.classList.remove('ok', 'err');
+      if (type === 'ok') statusEl.classList.add('ok');
+      if (type === 'err') statusEl.classList.add('err');
+    }
+
+    async function submitOrder(e) {
+      e.preventDefault();
+      setStatus('');
+      if (!APP_URL || APP_URL.includes('YOUR_APPS_SCRIPT_WEB_APP_URL_HERE')) {
+        setStatus('APP_URL is not configured yet.', 'err');
+        return;
+      }
+
+      // Basic validation guard (HTML5 will handle most required fields)
+      if (!form.reportValidity()) return;
+
+      const data = new FormData(form);
+      const payload = {
+        action: 'order',
+        order: {
+          name: (data.get('name') || '').toString().trim(),
+          date: (data.get('date') || '').toString(),
+          time: (data.get('time') || '').toString(),
+          location: (data.get('location') || '').toString().trim(),
+          quantity: (data.get('quantity') || '').toString(),
+          size: (data.get('size') || '').toString(),
+          diet: (data.get('diet') || '').toString().trim(),
+          extra: (data.get('extra') || '').toString().trim()
+        }
+      };
+
+      setBusy(true);
+      setStatus('Submitting your order…');
+
+      try {
+        const resp = await fetch(APP_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        const text = await resp.text();
+        let json;
+        try {
+          json = JSON.parse(text);
+        } catch {
+          throw new Error('Server returned non-JSON: ' + text);
+        }
+
+        if (json && json.ok) {
+          setStatus('Order received! We will confirm with you soon 🎉', 'ok');
+          form.reset();
+        } else {
+          setStatus(json && json.error
+            ? 'Error: ' + json.error
+            : 'Something went wrong saving your order.', 'err');
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus('Network error while sending your order.', 'err');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    form.addEventListener('submit', submitOrder);
+
+    // Optional: set min date to today
+    (function setMinDate() {
+      const dateInput = document.getElementById('date');
+      if (!dateInput) return;
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.min = `${yyyy}-${mm}-${dd}`;
+    })();
+  </script>
+</body>
+</html>
